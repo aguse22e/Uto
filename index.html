@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Uto — Solana Meme Coin Launchpad</title>
+<meta name="description" content="Uto — launchpad meme coin Solana. Buat token, trading, kirim dan terima SOL.">
+<style>
+:root{--bg:#0a0a0c;--bg2:#121214;--card:#16161a;--card2:#1d1d22;--gold:#d4af37;--gold2:#f1d27a;--gold-dim:#8a6d1f;--ivory:#f5efe0;--muted:#a8a29a;--line:#2a2a30;--green:#3fb97a;--red:#e05a5a;--radius:16px}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ivory);font-family:Manrope,'Segoe UI',system-ui,-apple-system,sans-serif;line-height:1.55;overflow-x:hidden}
+h1,h2,h3,.serif{font-family:'Playfair Display',Georgia,'Times New Roman',serif;letter-spacing:.02em}
+a{color:var(--gold2);text-decoration:none}
+a:hover{text-decoration:underline}
+button{font-family:inherit;cursor:pointer}
+input,select,textarea{font-family:inherit;font-size:15px;color:var(--ivory);background:#0f0f12;border:1px solid var(--line);border-radius:10px;padding:11px 12px;width:100%}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--gold);border-color:var(--gold)}
+label{display:block;font-size:13px;color:var(--muted);margin:12px 0 6px}
+.container{max-width:1180px;margin:0 auto;padding:0 18px}
+header{position:sticky;top:0;z-index:50;background:rgba(10,10,12,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--gold-dim)}
+.nav{display:flex;align-items:center;gap:14px;padding:14px 0;flex-wrap:wrap}
+.logo{display:flex;align-items:center;gap:10px;font-family:'Playfair Display',Georgia,serif;font-size:26px;font-weight:700;letter-spacing:.14em;color:var(--ivory)}
+.logo .mark{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#8a6d1f);color:#111;display:flex;align-items:center;justify-content:center;font-size:20px;flex-weight:700;flex-shrink:0}
+.logo small{font-size:11px;letter-spacing:.2em;color:var(--gold);display:block;font-family:Manrope,sans-serif}
+.nav-links{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
+.nav-links button{background:transparent;border:0;color:var(--ivory);padding:9px 13px;border-radius:999px;font-size:14px}
+.nav-links button:hover,.nav-links button.active{background:#22221a;color:var(--gold2);box-shadow:inset 0 -2px 0 var(--gold)}
+.btn{background:linear-gradient(135deg,var(--gold2),var(--gold));color:#141210;border:0;border-radius:999px;padding:12px 22px;font-weight:700;font-size:15px;position:relative;overflow:hidden}
+.btn:hover{filter:brightness(1.08)}
+.btn.ghost{background:transparent;color:var(--gold2);border:1px solid var(--gold)}
+.btn.danger{background:transparent;color:var(--red);border:1px solid var(--red)}
+.btn.small{padding:8px 14px;font-size:13px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.hero{padding:56px 0 34px;background:radial-gradient(900px 300px at 20% 0%,rgba(212,175,55,.16),transparent),linear-gradient(180deg,#101013,#0a0a0c);border-bottom:1px solid var(--line);animation:fadeIn .6s ease}
+.hero h1{font-size:clamp(34px,6vw,58px);line-height:1.08}
+.hero h1 span{color:var(--gold);font-style:italic}
+.hero p{color:var(--muted);max-width:640px;margin:16px 0 22px;font-size:17px}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap}
+.stats{display:flex;gap:14px;flex-wrap:wrap;margin-top:26px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 18px;min-width:140px}
+.stat b{font-size:20px;color:var(--gold2);display:block}
+.stat span{font-size:12px;color:var(--muted)}
+section{padding:28px 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px}
+.card h2{font-size:24px;margin-bottom:6px}
+.card h3{font-size:19px;margin-bottom:8px}
+.muted{color:var(--muted);font-size:14px}
+.gold{color:var(--gold2)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}
+.tabs button{background:var(--card);border:1px solid var(--line);color:var(--ivory);border-radius:999px;padding:9px 16px;font-size:14px}
+.tabs button.active{background:linear-gradient(135deg,var(--gold2),var(--gold));color:#141210;font-weight:700;border-color:transparent}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.toolbar input,.toolbar select{flex:1;min-width:160px}
+.grid{display:grid;grid-template-columns:1fr;gap:14px}
+@media(min-width:560px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:900px){.grid{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:1150px){.grid{grid-template-columns:repeat(4,1fr)}}
+.token{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;cursor:pointer;transition:transform .25s,border-color .25s,box-shadow .25s;animation:rise .45s ease both}
+.token:hover{transform:translateY(-4px);border-color:var(--gold);box-shadow:0 12px 30px rgba(0,0,0,.45)}
+.token .top{display:flex;gap:10px;align-items:center}
+.token .avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#5c4a12);display:flex;align-items:center;justify-content:center;font-weight:800;color:#111;font-size:18px;flex-shrink:0}
+.token .name{font-weight:700}
+.token .sym{color:var(--muted);font-size:13px}
+.token .price{font-size:20px;margin:12px 0 4px;color:var(--gold2)}
+.token .row{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);padding:3px 0}
+.pos{color:var(--green)} .neg{color:var(--red)}
+.empty{border:1px dashed var(--line);border-radius:var(--radius);padding:36px;text-align:center;color:var(--muted)}
+.wallet-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+@media(min-width:480px){.wallet-grid{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:900px){.wallet-grid{grid-template-columns:repeat(4,1fr)}}
+.wtile{background:var(--card2);border:1px solid var(--line);border-radius:16px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;cursor:pointer;position:relative;transition:transform .25s,border-color .25s,box-shadow .25s;animation:rise .4s ease both}
+.wtile:hover{transform:translateY(-4px) scale(1.02);border-color:var(--gold);box-shadow:0 10px 26px rgba(212,175,55,.18)}
+.wtile.selected{border-color:var(--gold);box-shadow:0 0 0 2px var(--gold)}
+.wtile .mono{width:62px;height:62px;border-radius:18px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:22px;color:#fff}
+.wtile .dot{position:absolute;top:10px;right:10px;width:11px;height:11px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 3px rgba(212,175,55,.25)}
+.wtile .abbr{font-size:12px;color:var(--muted);letter-spacing:.08em}
+.detail{margin-top:16px;border:1px solid var(--gold-dim);border-radius:var(--radius);padding:18px;background:#191914;animation:fadeIn .35s ease}
+.pill{display:inline-block;background:#22221a;border:1px solid var(--gold-dim);color:var(--gold2);border-radius:999px;padding:4px 10px;font-size:12px;margin:2px 4px 2px 0}
+.phrase-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0}
+@media(min-width:700px){.phrase-grid{grid-template-columns:repeat(4,1fr)}}
+.phrase-grid .w{background:#0f0f12;border:1px solid var(--gold-dim);border-radius:10px;padding:10px;text-align:center;cursor:pointer}
+.phrase-grid .w.sel{border-color:var(--gold);background:#2a2410}
+.phrase-grid .w span{color:var(--gold);font-size:11px;margin-right:6px}
+.notice{border:1px solid var(--red);background:#241313;color:#f3c1c1;border-radius:12px;padding:14px;margin:14px 0;font-size:14px}
+.notice.gold{border-color:var(--gold-dim);background:#201d10;color:var(--gold2)}
+.two{display:grid;grid-template-columns:1fr;gap:16px}
+@media(min-width:900px){.two{grid-template-columns:1fr 1fr}}
+.three{display:grid;grid-template-columns:1fr;gap:16px}
+@media(min-width:900px){.three{grid-template-columns:1fr 1fr 1fr}}
+table{width:100%;border-collapse:collapse;font-size:14px}
+td,th{padding:9px 6px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{color:var(--muted);font-size:12px;letter-spacing:.06em}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace;word-break:break-all}
+.hidden{display:none!important}
+footer{border-top:1px solid var(--line);padding:28px 0;color:var(--muted);font-size:13px}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header>
+<div class="container nav">
+<div class="logo"><span class="mark">U</span><span>UTO<small>SOLANA MAINNET</small></span></div>
+<nav class="nav-links" id="navLinks">
+<button data-view="feed" class="active" onclick="showView('feed')">Feed</button>
+<button data-view="creator" onclick="showView('creator')">Creator</button>
+<button data-view="account" onclick="showView('account')">Akun</button>
+<button data-view="wallet" onclick="showView('wallet')">Connect Wallet</button>
+<span id="navUser"></span>
+</nav>
+</div>
+</header>
+
+<main class="container">
+<section class="hero" id="view-feed-hero">
+<h1>Luncurkan meme coin <span>Solana</span> dalam hitungan menit.</h1>
+<p>Uto adalah launchpad meme coin Solana. Buat token, trading, dan kelola wallet kamu — dengan akun yang terpisah dari wallet.</p>
+<div class="hero-actions">
+<button class="btn" onclick="goCreate()">Buat Coin</button>
+<button class="btn ghost" onclick="showView('wallet')">Connect Wallet</button>
+</div>
+<div class="stats">
+<div class="stat"><b id="statSol">—</b><span>Harga SOL (USD)</span></div>
+<div class="stat"><b id="statCount">0</b><span>Token di feed</span></div>
+<div class="stat"><b>Solana</b><span>Jaringan</span></div>
+<div class="stat"><b id="statUpdated">—</b><span>Data: DEX Screener</span></div>
+</div>
+</section>
+
+<section id="view-feed">
+<div class="card">
+<h2>Token Solana (DEX Screener)</h2>
+<p class="muted">Token dari DEX Screener. Klik kartu untuk melihat detail, chart, dan swap.</p>
+<div class="tabs" id="feedTabs">
+<button data-tab="new" class="active" onclick="setTab('new')">New</button>
+<button data-tab="trending" onclick="setTab('trending')">Trending</button>
+<button data-tab="graduate" onclick="setTab('graduate')">About to Graduate</button>
+<button data-tab="graduated" onclick="setTab('graduated')">Graduated</button>
+</div>
+<div class="toolbar">
+<input id="searchInput" placeholder="Cari token (min. 2 karakter)…" oninput="renderFeed()">
+<select id="sortSelect" onchange="renderFeed()"><option value="volume">Urutkan: Volume</option><option value="mcap">Urutkan: Market Cap</option><option value="newest">Urutkan: Terbaru</option><option value="price">Urutkan: Harga</option></select>
+<select id="filterSelect" onchange="renderFeed()"><option value="all">Semua status</option><option value="new">Baru</option><option value="trending">Trending</option></select>
+<button class="btn ghost small" onclick="loadFeed(true)">Refresh</button>
+</div>
+<div id="feedGrid" class="grid"></div>
+<div id="feedEmpty" class="empty hidden">Tidak ada token yang ditampilkan saat ini. Coba Refresh atau ubah pencarian.</div>
+</div>
+<div id="tokenDetail" class="card hidden" style="margin-top:16px"></div>
+</section>
+
+<section id="view-creator" class="hidden">
+<div class="card">
+<h2>Creator Dashboard</h2>
+<p class="muted">Buat token dan kelola kreasi kamu. Buat coin hanya tersedia setelah login.</p>
+<div id="creatorLocked" class="notice gold">Login dulu untuk membuka Creator Dashboard dan Buat Coin.</div>
+<div id="creatorBody" class="hidden">
+<div class="two">
+<div>
+<h3>Buat Coin</h3>
+<label>Nama token</label><input id="createName" placeholder="Contoh: Uto Coin">
+<label>Simbol</label><input id="createSymbol" placeholder="Contoh: UTO">
+<label>Deskripsi</label><textarea id="createDesc" rows="3" placeholder="Deskripsi token"></textarea>
+<label>Jumlah supply</label><input id="createSupply" type="number" value="1000000000">
+<label>Gambar (URL, opsional)</label><input id="createImage" placeholder="https://…">
+<button class="btn" style="margin-top:14px" onclick="saveCreateDraft()">Simpan Draf &amp; Lanjutkan Mint</button>
+<p class="muted" style="margin-top:10px">Mint SPL nyata dilakukan dari wallet kamu di mainnet. Draf tersimpan di perangkat ini, lalu buka Jupiter / wallet untuk mint dengan metadata yang sudah kamu siapkan. Uto tidak pernah meminta seed phrase atau private key.</p>
+<div id="createResult"></div>
+</div>
+<div>
+<h3>Kreasi Saya</h3>
+<div id="myTokens"><p class="muted">Belum ada draf token.</p></div>
+<h3 style="margin-top:18px">Klaim Fee Kreator</h3>
+<p class="muted">Fee kreator 0,25% — klaim manual setelah token kamu diperdagangkan. Di versi statis ini klaim dicatat lokal.</p>
+<button class="btn ghost small" onclick="claimFee()">Klaim Fee</button>
+<div id="claimResult" class="muted" style="margin-top:8px"></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<section id="view-account" class="hidden">
+<div class="card">
+<h2>Akun</h2>
+<p class="muted">Akun Uto terpisah dari wallet Solana. Wallet tetap untuk transaksi on-chain.</p>
+<div id="authBox">
+<div class="tabs"><button id="tabLogin" class="active" onclick="setAuthTab('login')">Masuk</button><button id="tabRegister" onclick="setAuthTab('register')">Daftar</button></div>
+<div id="loginForm">
+<label>Username</label><input id="loginUser" placeholder="username">
+<label>Password</label><input id="loginPass" type="password" placeholder="password">
+<button class="btn" style="margin-top:14px" onclick="doLogin()">Masuk</button>
+<p class="muted" style="margin-top:10px">Lupa password? <a href="#" onclick="startRecovery(event)">Pulihkan dengan frasa 12 kata</a></p>
+<div id="loginMsg" class="muted" style="margin-top:8px"></div>
+<div id="firstAdminBox" class="hidden notice gold"><b>Akun Admin uto belum punya password.</b><br>Buat password admin pertama di sini. Password ini hanya tersimpan di perangkat ini sebagai hash, dan tidak ada di file ini.
+<label>Password admin baru</label><input id="adminFirstPass" type="password">
+<label>Ulangi password</label><input id="adminFirstPass2" type="password">
+<button class="btn small" style="margin-top:10px" onclick="setFirstAdminPassword()">Simpan Password Admin</button></div>
+</div>
+<div id="registerForm" class="hidden">
+<label>Username</label><input id="regUser" placeholder="username (huruf, angka, _)">
+<label>Nama tampil</label><input id="regName" placeholder="Nama tampil">
+<label>Password (min. 8 karakter)</label><input id="regPass" type="password">
+<label>Ulangi password</label><input id="regPass2" type="password">
+<button class="btn" style="margin-top:14px" onclick="doRegister()">Daftar</button>
+<div id="regMsg" class="muted" style="margin-top:8px"></div>
+</div>
+<div id="phraseBox" class="hidden">
+<div class="notice"><b>Catat frasa pemulihan ini sekarang.</b> 12 kata bahasa Inggris, semuanya berbeda. Simpan offline, jangan dibagikan ke siapa pun, jangan disimpan di screenshot yang dibagikan. Frasa ini hanya ditampilkan sekali.</div>
+<div class="phrase-grid" id="phraseGrid"></div>
+<button class="btn" onclick="showPhraseConfirm()">Saya sudah mencatat — lanjutkan konfirmasi</button>
+<div id="phraseConfirm" class="hidden">
+<p class="muted" style="margin-top:12px">Ketuk kata-kata di bawah sesuai urutan frasa kamu:</p>
+<div class="phrase-grid" id="confirmGrid"></div>
+<div id="confirmPicked" class="muted"></div>
+<button class="btn" style="margin-top:10px" onclick="checkPhraseConfirm()">Konfirmasi Frasa</button>
+<button class="btn ghost small" onclick="resetPhrasePick()">Ulangi</button>
+<div id="phraseMsg" class="muted" style="margin-top:8px"></div>
+</div>
+</div>
+<div id="totpBox" class="hidden">
+<h3>Verifikasi 2FA</h3>
+<p class="muted">Masukkan kode 6 digit dari aplikasi autentikator (misalnya Google Authenticator).</p>
+<label>Kode 6 digit</label><input id="totpCode" inputmode="numeric" maxlength="6" placeholder="000000">
+<button class="btn" style="margin-top:12px" onclick="verifyTotpLogin()">Verifikasi &amp; Masuk</button>
+<p class="muted" style="margin-top:8px">Atau gunakan salah satu kode pemulihan darurat sekali pakai.</p>
+<label>Kode pemulihan darurat</label><input id="recoveryCodeInput" placeholder="XXXX-XXXX">
+<button class="btn ghost small" onclick="useEmergencyCode()">Gunakan Kode Pemulihan</button>
+<div id="totpMsg" class="muted" style="margin-top:8px"></div>
+</div>
+<div id="recoveryBox" class="hidden">
+<h3>Pulihkan Akun</h3>
+<label>Username</label><input id="recUser" placeholder="username">
+<label>Frasa pemulihan (12 kata, pisahkan dengan spasi)</label><textarea id="recPhrase" rows="2"></textarea>
+<label>Password baru</label><input id="recPass" type="password">
+<button class="btn" style="margin-top:12px" onclick="doRecovery()">Pulihkan &amp; Ganti Password</button>
+<div id="recMsg" class="muted" style="margin-top:8px"></div>
+</div>
+</div>
+
+<div id="dashboardBox" class="hidden">
+<div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between">
+<div><h3 id="dashTitle">Akun Saya</h3><p class="muted" id="dashSub"></p></div>
+<button class="btn ghost small" onclick="doLogout()">Keluar</button>
+</div>
+<div id="changePassWarning" class="notice hidden"><b>Segera ganti password default kamu.</b> Password ini lemah — ganti di bawah.</div>
+<div class="three" style="margin-top:14px">
+<div class="card" style="background:var(--card2)"><h3>Buat Coin</h3><p class="muted">Mint SPL di mainnet dari wallet kamu.</p><button class="btn small" onclick="showView('creator')">Buka Buat Coin</button></div>
+<div class="card" style="background:var(--card2)"><h3>Kirim &amp; Terima — Solana</h3><p class="muted">Kirim SOL / token SPL dan terima di alamat wallet kamu.</p><button class="btn small" onclick="toggleTransfer()">Buka Kirim &amp; Terima</button></div>
+<div class="card" style="background:var(--card2)"><h3>Connect Wallet</h3><p class="muted">Hubungkan wallet Solana / Web3.</p><button class="btn small" onclick="showView('wallet')">Buka Wallet</button></div>
+</div>
+
+<div id="transferBox" class="card hidden" style="margin-top:16px;background:var(--card2)">
+<h3>Kirim &amp; Terima — Solana Mainnet</h3>
+<div class="two">
+<div>
+<h3>Kirim</h3>
+<label>Alamat tujuan (Solana)</label><input id="sendTo" placeholder="Alamat base58 32–44 karakter">
+<label>Aset</label><select id="sendAsset"><option value="SOL">SOL</option><option value="SPL">Token SPL (masukkan mint di catatan)</option></select>
+<label>Jumlah</label><input id="sendAmount" type="number" step="any" placeholder="0.00">
+<div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap"><button class="btn small" onclick="setMaxSend()">Maks</button><button class="btn small" onclick="reviewSend()">Tinjau Kirim</button></div>
+<p class="muted" style="margin-top:8px">Estimasi fee jaringan: sekitar 0,000005 SOL per transaksi, ditambah rent bila akun token penerima belum ada. Pengiriman hanya terjadi setelah kamu menandatangani di wallet.</p>
+<div id="sendReview"></div>
+</div>
+<div>
+<h3>Terima</h3>
+<p class="muted">Alamat wallet Solana kamu:</p>
+<p class="mono" id="receiveAddr" style="font-size:14px">Belum terhubung — hubungkan wallet dulu.</p>
+<div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap"><button class="btn ghost small" onclick="copyReceive()">Salin Alamat</button><button class="btn ghost small" onclick="showView('wallet')">Connect Wallet</button></div>
+<p class="muted" style="margin-top:10px">Hanya terima aset jaringan Solana mainnet di alamat ini. Jangan kirim aset dari jaringan lain ke alamat ini.</p>
+<h3 style="margin-top:16px">Riwayat Kirim / Terima</h3>
+<div id="transferHistory"><p class="muted">Belum ada riwayat di perangkat ini.</p></div>
+<button class="btn ghost small" onclick="renderTransferHistory()">Muat Ulang Riwayat</button>
+</div>
+</div>
+</div>
+
+<div class="card" style="margin-top:16px;background:var(--card2)">
+<h3>Profil &amp; Ganti Password</h3>
+<label>Nama tampil</label><input id="profileName">
+<button class="btn ghost small" style="margin-top:8px" onclick="saveProfile()">Simpan Nama</button>
+<label>Password lama</label><input id="oldPass" type="password">
+<label>Password baru (min. 8 karakter)</label><input id="newPass" type="password">
+<button class="btn ghost small" style="margin-top:8px" onclick="changePassword()">Ganti Password</button>
+<div id="profileMsg" class="muted" style="margin-top:8px"></div>
+</div>
+
+<div class="card" style="margin-top:16px;background:var(--card2)">
+<h3>Keamanan — Frasa Pemulihan &amp; 2FA</h3>
+<p class="muted" id="securityStatus"></p>
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin:10px 0">
+<button class="btn ghost small" onclick="regenPhrase()">Buat Ulang Frasa Pemulihan</button>
+<button class="btn ghost small" onclick="showTotpSetup()">Atur 2FA</button>
+<button class="btn ghost small" onclick="disableTotp()">Nonaktifkan 2FA</button>
+</div>
+<div id="totpSetup" class="hidden">
+<p class="muted">Masukkan secret ini secara manual di Google Authenticator, atau buka tautan otpauth di bawah:</p>
+<p class="mono" id="totpSecretText"></p>
+<p class="mono" id="totpUrlText" style="font-size:12px"></p>
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><button class="btn ghost small" onclick="copyTotpSecret()">Salin Secret</button><button class="btn ghost small" onclick="copyTotpUrl()">Salin Tautan otpauth</button></div>
+<label>Kode 6 digit dari aplikasi autentikator</label><input id="totpSetupCode" inputmode="numeric" maxlength="6" placeholder="000000">
+<button class="btn small" style="margin-top:10px" onclick="activateTotp()">Aktifkan 2FA</button>
+<div id="totpSetupMsg" class="muted" style="margin-top:8px"></div>
+<div id="emergencyBox" class="hidden">
+<p class="muted" style="margin-top:10px"><b>Kode pemulihan darurat (sekali pakai, tampil sekali):</b></p>
+<p class="mono" id="emergencyList"></p>
+</div>
+</div>
+</div>
+
+<div id="adminBox" class="hidden">
+<div class="card" style="margin-top:16px;background:#1c1a10;border-color:var(--gold-dim)">
+<h3>Dashboard Admin</h3>
+<div id="adminStats" class="muted"></div>
+<div id="realStatusPanel" style="margin-top:12px">
+<h3>Status Fitur — Real vs Menunggu Deploy</h3>
+<p class="muted">Hanya Admin yang melihat panel ini.</p>
+<table><tr><th>Fitur</th><th>Status</th></tr>
+<tr><td>Bonding curve Uto</td><td>Menunggu deploy program Anchor + audit independen</td></tr>
+<tr><td>Graduation otomatis</td><td>Menunggu deploy program Anchor + audit independen</td></tr>
+<tr><td>Creator fee on-chain</td><td>Menunggu deploy program Anchor + audit independen</td></tr>
+<tr><td>Swap via Jupiter, saldo RPC, mint SPL</td><td>Tersedia di mainnet</td></tr></table>
+</div>
+<h3 style="margin-top:16px">Kelola Pengguna</h3>
+<div id="userList"></div>
+<h3 style="margin-top:16px">Tambah Pengguna Manual</h3>
+<label>Username</label><input id="manualUser" placeholder="username">
+<label>Nama tampil</label><input id="manualName" placeholder="Nama tampil">
+<label>Peran</label><select id="manualRole"><option value="pemain">Pemain</option><option value="admin">Admin</option></select>
+<label>Password awal</label><input id="manualPass" type="password" placeholder="min. 8 karakter">
+<button class="btn small" style="margin-top:10px" onclick="adminCreateUser()">Tambah Pengguna</button>
+<div id="manualMsg" class="muted" style="margin-top:8px"></div>
+</div>
+</div>
+</div>
+</section>
+
+<section id="view-wallet" class="hidden">
+<div class="card">
+<h2>Connect Wallet</h2>
+<p class="muted">Pilih logo dompet di bawah. Klik logo untuk membuka detail dan connect.</p>
+<div id="walletStatus" class="muted" style="margin-bottom:12px">Belum terhubung.</div>
+<div class="wallet-grid" id="walletGrid"></div>
+<div id="walletDetail" class="detail hidden"></div>
+<div class="card" style="margin-top:16px;background:var(--card2)">
+<h3>Catatan WalletConnect &amp; Exchange Indonesia</h3>
+<p class="muted">WalletConnect di versi ini berupa panduan: buka Uto dari dApp browser aplikasi wallet kamu, lalu connect lewat grup provider yang terdeteksi. Ini bukan pairing QR WalletConnect langsung.</p>
+<p class="muted" style="margin-top:8px">Pintu, Tokocrypto, Indodax, dan Reku adalah exchange kustodial di aplikasinya masing-masing. Di Uto mereka terhubung lewat WalletConnect / alamat Solana yang diimpor — bukan kustodial di Uto.</p>
+<p class="muted" style="margin-top:8px">Uto tidak pernah meminta seed phrase atau private key.</p>
+</div>
+</div>
+</section>
+</main>
+<footer><div class="container">
+<p><b class="gold">UTO</b> — Solana Meme Coin Launchpad. Transaksi dapat diverifikasi di Solscan. Uto tidak menyimpan seed phrase / private key.</p>
+<p style="margin-top:6px">Versi statis GitHub Pages. Fitur server di aplikasi penuh tidak tersedia di sini.</p>
+</div></footer>
+<script>
+
+/* Uto — static version. Data tersimpan lokal di perangkat (localStorage uto-app-v1). */
+const LS_KEY='uto-app-v1';
+const WORDS=['abandon','ability','able','about','above','absent','absorb','abstract','absurd','abuse','access','accident','account','accuse','achieve','acid','acoustic','acquire','across','act','action','actor','actress','actual','adapt','add','addict','address','adjust','admit','adult','advance','advice','aerobic','affair','afford','afraid','again','age','agent','agree','ahead','aim','air','airport','aisle','alarm','album','alcohol','alert','alien','all','alley','allow','almost','alone','alpha','already','also','alter','always','amateur','amazing','among','amount','amused','analyst','anchor','ancient','anger','angle','angry','animal','ankle','announce','annual','another','answer','antenna','antique','anxiety','any','apart','apology','appear','apple','approve','april','arch','arctic','area','arena','argue','arm','armed','armor','army','around','arrange','arrest','arrive','arrow','art','artefact','artist','artwork','ask','aspect','assault','asset','assist','assume','asthma','athlete','atom','attack','attend','attitude','attract','auction','audit','august','aunt','author','auto','autumn','average','avocado','avoid','awake','aware','away','awesome','awful','awkward','axis','baby','bachelor','bacon','badge','bag','balance','balcony','ball','bamboo','banana','banner','bar','barely','bargain','barrel','base','basic','basket','battle','beach','bean','beauty','because','become','beef','before','begin','behave','behind','believe','below','belt','bench','benefit','best','betray','better','between','beyond','bicycle','bid','bike','bind','biology','bird','birth','bitter','black','blade','blame','blanket','blast','bleak','bless','blind','blood','blossom','blouse','blue','blur','blush','board','boat','body','boil','bomb','bone','bonus','book','boost','border','boring','borrow','boss','bottom','bounce','box','boy','bracket','brain','brand','brass','brave','bread','breeze','brick','bridge','brief','bright','bring','brisk','broccoli','broken','bronze','broom','brother','brown','brush','bubble','buddy','budget','buffalo','build','bulb','bulk','bullet','bundle','bunker','burden','burger','burst','bus','business','busy','butter','buyer','buzz','cabbage','cabin','cable','cactus','cage','cake','call','calm','camera','camp','can','canal','cancel','candy','cannon','canoe','canvas','canyon','capable','capital','captain','car','carbon','card','cargo','carpet','carry','cart','case','cash','casino','castle','casual','cat','catalog','catch','category','cattle','caught','cause','caution','cave','ceiling','celery','cement','census','century','cereal','certain','chair','chalk','champion','change','chaos','chapter','charge','chase','chat','cheap','check','cheese','chef','cherry','chest','chicken','chief','child','chimney','choice','choose','chronic','chuckle','chunk','churn','cigar','cinnamon','circle','citizen','city','civil','claim','clap','clarify','claw','clay','clean','clerk','clever','click','client','cliff','climb','clinic','clip','clock','clog','close','cloth','cloud','clown','club','clump','cluster','clutch','coach','coast','coconut','code','coffee','coil','coin','collect','color','column','combine','come','comfort','comic','common','company','concert','conduct','confirm','congress','connect','consider','control','convince','cook','cool','copper','copy','coral','core','corn','correct','cost','cotton','couch','country','couple','course','cousin','cover','coyote','crack','cradle','craft','cram','crane','crash','crater','crawl','crazy','cream','credit','creek','crew','cricket','crime','crisp','critic','crop','cross','crouch','crowd','crucial','cruel','cruise','crumble','crunch','crush','cry','crystal','cube','culture','cup','cupboard','curious','current','curtain','curve','cushion','custom','cute','cycle'];
+function $(id){return document.getElementById(id)}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function randSalt(){const a=new Uint8Array(16);(crypto.getRandomValues?crypto.getRandomValues(a):a.forEach((_,i)=>a[i]=Math.floor(Math.random()*256)));return Array.from(a).map(b=>b.toString(16).padStart(2,'0')).join('')}
+async function sha256Hex(str){try{if(crypto.subtle){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(str));return Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,'0')).join('')}}catch(e){}let h1=0x811c9dc5,h2=0x01000193;for(let i=0;i<str.length;i++){h1=Math.imul(h1^str.charCodeAt(i),16777619)>>>0;h2=(h2*31+str.charCodeAt(i))>>>0}return 'fb'+h1.toString(16)+h2.toString(16)}
+async function hashPassword(pw,salt){return await sha256Hex(salt+':'+pw)}
+function loadState(){try{const s=JSON.parse(localStorage.getItem(LS_KEY)||'null');if(s&&s.users)return s}catch(e){}return {users:[],session:null,comments:{},tokens:[],transfers:[],watchAddress:null}}
+function saveState(){localStorage.setItem(LS_KEY,JSON.stringify(state))}
+let state=loadState();
+if(!state.users.find(u=>u.username==='uto')){
+  state.users.push({username:'uto',displayName:'Uto',role:'admin',salt:randSalt(),passwordHash:'',mustChangePassword:true,totpSecret:null,totpEnabled:false,recoveryHash:'',recoveryConfirmed:false,emergencyHashes:[],createdAt:new Date().toISOString()});
+  saveState();
+}
+function currentUser(){return state.session?state.users.find(u=>u.username===state.session):null}
+function fmtNum(n){if(n==null||isNaN(n))return '—';if(n>=1e9)return '$'+(n/1e9).toFixed(2)+' M';if(n>=1e6)return '$'+(n/1e6).toFixed(2)+' jt';if(n>=1e3)return '$'+(n/1e3).toFixed(1)+' rb';return '$'+Number(n).toFixed(6)}
+function fmtPrice(p){if(p==null)return '—';return p<0.01?'$'+Number(p).toFixed(6):'$'+Number(p).toFixed(4)}
+function timeAgo(ts){if(!ts)return '—';const s=(Date.now()-ts)/1000;if(s<60)return Math.floor(s)+' dtk lalu';if(s<3600)return Math.floor(s/60)+' mnt lalu';if(s<86400)return Math.floor(s/3600)+' jam lalu';return Math.floor(s/86400)+' hari lalu'}
+/* ---- Views ---- */
+function showView(v){
+  ['feed','creator','account','wallet'].forEach(x=>{const el=$('view-'+x);if(el)el.classList.toggle('hidden',x!==v)});
+  const hero=$('view-feed-hero'); if(hero)hero.classList.toggle('hidden',v!=='feed');
+  document.querySelectorAll('#navLinks button[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===v));
+  if(v==='account')renderAccount();
+  if(v==='creator')renderCreator();
+  if(v==='wallet')renderWallet();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function goCreate(){const u=currentUser();if(!u){showView('account');$('loginMsg').textContent='Login dulu untuk Buat Coin.';return}showView('creator')}
+function setAuthTab(t){$('tabLogin').classList.toggle('active',t==='login');$('tabRegister').classList.toggle('active',t==='register');$('loginForm').classList.toggle('hidden',t!=='login');$('registerForm').classList.toggle('hidden',t!=='register');['phraseBox','totpBox','recoveryBox'].forEach(id=>$(id).classList.add('hidden'))}
+/* ---- Recovery phrase ---- */
+function genPhrase(){const pool=[...WORDS];const out=[];while(out.length<12){const i=Math.floor(Math.random()*pool.length);out.push(pool.splice(i,1)[0])}return out}
+let pendingUser=null,pendingPhrase=[],phrasePick=[];
+function showPhraseFor(user,phrase){
+  pendingUser=user;pendingPhrase=phrase;phrasePick=[];
+  $('phraseGrid').innerHTML=phrase.map((w,i)=>'<div class="w"><span>'+(i+1)+'</span>'+esc(w)+'</div>').join('');
+  $('phraseConfirm').classList.add('hidden');$('phraseMsg').textContent='';
+  $('authBox').classList.remove('hidden');$('dashboardBox').classList.add('hidden');
+  $('phraseBox').classList.remove('hidden');$('loginForm').classList.add('hidden');$('registerForm').classList.add('hidden');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function showPhraseConfirm(){
+  const sh=[...pendingPhrase].sort(()=>Math.random()-0.5);
+  $('confirmGrid').innerHTML=sh.map(w=>'<div class="w" onclick="pickPhraseWord(this,\''+w+'\')">'+esc(w)+'</div>').join('');
+  $('confirmPicked').textContent='';phrasePick=[];
+  $('phraseConfirm').classList.remove('hidden');
+}
+function pickPhraseWord(el,w){if(phrasePick.includes(w))return;phrasePick.push(w);el.classList.add('sel');$('confirmPicked').textContent='Dipilih ('+phrasePick.length+'/12): '+phrasePick.join(' ')}
+function resetPhrasePick(){phrasePick=[];showPhraseConfirm()}
+async function checkPhraseConfirm(){
+  if(phrasePick.join(' ')!==pendingPhrase.join(' ')){$('phraseMsg').textContent='Urutan kata belum benar. Coba lagi.';return}
+  const u=state.users.find(x=>x.username===pendingUser);if(!u)return;
+  u.recoveryHash=await sha256Hex(pendingPhrase.join(' '));u.recoveryConfirmed=true;saveState();
+  $('phraseMsg').textContent='Frasa terkonfirmasi. Akun kamu aktif.';
+  setTimeout(()=>{startSession(u)},600);
+}
+function regenPhrase(){
+  const u=currentUser();if(!u)return;const ph=genPhrase();pendingUser=u.username;pendingPhrase=ph;phrasePick=[];
+  $('dashboardBox').classList.add('hidden');$('authBox').classList.remove('hidden');showPhraseFor(u,ph);
+  $('phraseMsg').textContent='Frasa lama hangus setelah frasa baru dikonfirmasi.';
+}
+/* ---- Auth ---- */
+async function doRegister(){
+  const username=$('regUser').value.trim().toLowerCase(),name=$('regName').value.trim(),pw=$('regPass').value,pw2=$('regPass2').value;
+  const msg=$('regMsg');
+  if(!/^[a-z0-9_]{3,20}$/.test(username)){msg.textContent='Username 3–20 karakter, huruf/angka/_ saja.';return}
+  if(username==='uto'){msg.textContent='Username itu dicadangkan.';return}
+  if(state.users.find(u=>u.username===username)){msg.textContent='Username sudah dipakai.';return}
+  if(!name){msg.textContent='Isi nama tampil.';return}
+  if(pw.length<8){msg.textContent='Password minimal 8 karakter.';return}
+  if(pw!==pw2){msg.textContent='Password tidak sama.';return}
+  const salt=randSalt();const hash=await hashPassword(pw,salt);
+  const u={username,displayName:name,role:'pemain',salt,passwordHash:hash,mustChangePassword:false,totpSecret:null,totpEnabled:false,recoveryHash:'',recoveryConfirmed:false,emergencyHashes:[],createdAt:new Date().toISOString()};
+  state.users.push(u);saveState();
+  showPhraseFor(username,genPhrase());
+  msg.textContent='';
+}
+async function doLogin(){
+  const username=$('loginUser').value.trim().toLowerCase(),pw=$('loginPass').value;
+  const msg=$('loginMsg');const u=state.users.find(x=>x.username===username);
+  if(!u){msg.textContent='Username atau password salah.';return}
+  if(u.mustChangePassword&&!u.passwordHash){
+    $('firstAdminBox').classList.remove('hidden');msg.textContent='Akun Admin uto belum punya password. Buat password admin pertama di atas.';return;
+  }
+  const hash=await hashPassword(pw,u.salt);
+  if(hash!==u.passwordHash){msg.textContent='Username atau password salah.';return}
+  if(!u.recoveryConfirmed){showPhraseFor(username,genPhrase());msg.textContent='Konfirmasi frasa pemulihan dulu.';return}
+  pendingUser=username;
+  if(u.totpEnabled){$('loginForm').classList.add('hidden');$('totpBox').classList.remove('hidden');$('totpMsg').textContent='';return}
+  startSession(u);
+}
+async function setFirstAdminPassword(){
+  const pw=$('adminFirstPass').value,pw2=$('adminFirstPass2').value;const msg=$('loginMsg');
+  if(pw.length<8){msg.textContent='Password minimal 8 karakter.';return}
+  if(pw!==pw2){msg.textContent='Password tidak sama.';return}
+  const u=state.users.find(x=>x.username==='uto');u.salt=randSalt();u.passwordHash=await hashPassword(pw,u.salt);u.mustChangePassword=true;saveState();
+  $('firstAdminBox').classList.add('hidden');msg.textContent='Password admin tersimpan sebagai hash. Login lagi dengan password baru, lalu ganti password di dashboard.';
+}
+function startSession(u){state.session=u.username;saveState();renderAccount();showView('account');$('loginMsg').textContent='';$('loginForm').classList.remove('hidden');$('totpBox').classList.add('hidden');$('phraseBox').classList.add('hidden')}
+function doLogout(){state.session=null;saveState();renderAccount();showView('account')}
+function startRecovery(e){if(e)e.preventDefault();$('loginForm').classList.add('hidden');$('registerForm').classList.add('hidden');$('recoveryBox').classList.remove('hidden')}
+async function doRecovery(){
+  const username=$('recUser').value.trim().toLowerCase(),phrase=$('recPhrase').value.trim().toLowerCase().split(/\s+/).join(' '),pw=$('recPass').value;const msg=$('recMsg');
+  const u=state.users.find(x=>x.username===username);if(!u){msg.textContent='Akun tidak ditemukan.';return}
+  if(!u.recoveryHash){msg.textContent='Akun ini belum punya frasa pemulihan.';return}
+  const h=await sha256Hex(phrase);if(h!==u.recoveryHash){msg.textContent='Frasa pemulihan salah.';return}
+  if(pw.length<8){msg.textContent='Password baru minimal 8 karakter.';return}
+  u.salt=randSalt();u.passwordHash=await hashPassword(pw,u.salt);u.mustChangePassword=true;u.totpEnabled=false;u.totpSecret=null;saveState();
+  msg.textContent='Password berhasil diganti. Login dengan password baru.';
+}
+/* ---- TOTP (RFC 6238, HMAC-SHA1, 30 detik) ---- */
+const B32='ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+function genSecret(){let s='';const a=new Uint8Array(10);crypto.getRandomValues(a);for(let i=0;i<16;i++){s+=B32[a[i]%32]}return s}
+function b32Decode(s){s=s.replace(/=+$/,'').toUpperCase();let bits='';for(const c of s){const v=B32.indexOf(c);if(v<0)continue;bits+=v.toString(2).padStart(5,'0')}const out=[];for(let i=0;i+8<=bits.length;i+=8)out.push(parseInt(bits.slice(i,i+8),2));return new Uint8Array(out)}
+async function totpCode(secret,stepOffset){
+  const counter=Math.floor(Date.now()/30000)+(stepOffset||0);
+  const buf=new ArrayBuffer(8);const v=new DataView(buf);v.setUint32(0,Math.floor(counter/4294967296));v.setUint32(4,counter>>>0);
+  const key=await crypto.subtle.importKey('raw',b32Decode(secret),{name:'HMAC',hash:'SHA-1'},false,['sign']);
+  const sig=new Uint8Array(await crypto.subtle.sign('HMAC',key,buf));
+  const off=sig[19]&0xf;const code=((sig[off]&0x7f)<<24|(sig[off+1]<<16)|(sig[off+2]<<8)|sig[off+3])%1000000;
+  return String(code).padStart(6,'0');
+}
+async function verifyTotp(secret,code){for(const o of[-1,0,1]){if(await totpCode(secret,o)===code)return true}return false}
+function showTotpSetup(){
+  const u=currentUser();if(!u)return;const secret=u.totpSecret||genSecret();u.totpSecret=secret;saveState();
+  const url='otpauth://totp/Uto:'+encodeURIComponent(u.username)+'?secret='+secret+'&issuer=Uto';
+  $('totpSecretText').textContent='Secret: '+secret;$('totpUrlText').textContent=url;$('totpSetup').classList.remove('hidden');$('emergencyBox').classList.add('hidden');
+}
+function copyText(t){if(navigator.clipboard)navigator.clipboard.writeText(t);else{const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove()}}
+function copyTotpSecret(){const u=currentUser();if(u&&u.totpSecret)copyText(u.totpSecret)}
+function copyTotpUrl(){copyText($('totpUrlText').textContent)}
+async function activateTotp(){
+  const u=currentUser();if(!u||!u.totpSecret)return;const code=$('totpSetupCode').value.trim();const msg=$('totpSetupMsg');
+  if(!(await verifyTotp(u.totpSecret,code))){msg.textContent='Kode salah. Coba kode terbaru dari aplikasi autentikator.';return}
+  u.totpEnabled=true;const codes=[];u.emergencyHashes=[];
+  for(let i=0;i<8;i++){const c=Math.random().toString(36).slice(2,6).toUpperCase()+'-'+Math.random().toString(36).slice(2,6).toUpperCase();codes.push(c);u.emergencyHashes.push(await sha256Hex(c))}
+  saveState();$('emergencyList').textContent=codes.join('  ');$('emergencyBox').classList.remove('hidden');msg.textContent='2FA aktif. Simpan kode pemulihan di atas — hanya tampil sekali.';renderAccount();
+}
+async function verifyTotpLogin(){
+  const u=state.users.find(x=>x.username===pendingUser);if(!u)return;const code=$('totpCode').value.trim();
+  if(await verifyTotp(u.totpSecret,code)){startSession(u)}else{$('totpMsg').textContent='Kode salah.'}
+}
+async function useEmergencyCode(){
+  const u=state.users.find(x=>x.username===pendingUser);if(!u)return;const code=$('recoveryCodeInput').value.trim().toUpperCase();const h=await sha256Hex(code);
+  const idx=u.emergencyHashes.indexOf(h);if(idx<0){$('totpMsg').textContent='Kode pemulihan tidak valid.';return}
+  u.emergencyHashes.splice(idx,1);saveState();startSession(u);
+}
+async function disableTotp(){
+  const u=currentUser();if(!u)return;const pw=prompt('Masukkan password kamu untuk menonaktifkan 2FA:');if(!pw)return;
+  const h=await hashPassword(pw,u.salt);if(h!==u.passwordHash){alert('Password salah.');return}
+  u.totpEnabled=false;u.totpSecret=null;saveState();renderAccount();alert('2FA dinonaktifkan.');
+}
